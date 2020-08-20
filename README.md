@@ -149,6 +149,23 @@ Rscript /Users/dooley/bio_script/graph_rnaseq_counts_line_mean_sd.R ${i} /Users/
 done
 ```
 
-##  Extracting sequence regions from .bam files
+##  Extracting sequence and calling variants (mpileup) regions from .bam files
 
-
+```bash
+for i in {1..18} 21 22 {25..28};
+do
+	samtools index S1906Nr${i}Aligned.sortedByCoord.out.bam
+	samtools view -b S1906Nr${i}Aligned.sortedByCoord.out.bam 15:40217256-40267485 > kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.bam
+	bcftools mpileup -Ou -f /ebio/ecnv_projects/common_resourses/data/reference_genome/GRCz11/Danio_rerio.GRCz11.dna.primary_assembly.fa kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.bam | bcftools call -mv -Oz -o kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.vcf.gz
+	bcftools index kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.vcf.gz
+	bcftools norm -f /ebio/ecnv_projects/common_resourses/data/reference_genome/GRCz11/Danio_rerio.GRCz11.dna.primary_assembly.fa kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.vcf.gz -Ob -o kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.norm.bcf
+	bcftools filter --IndelGap 5 kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.norm.bcf -Ob -o kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.norm.flt-indels.bcf
+	bcftools index kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.norm.flt-indels.bcf
+	cat /ebio/ecnv_projects/common_resourses/data/reference_genome/GRCz11/Danio_rerio.GRCz11.dna.primary_assembly.fa | bcftools consensus kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.norm.flt-indels.bcf > kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus_Danio_rerio.GRCz11.dna.primary_assembly.fa
+	bedtools getfasta -fi kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus_Danio_rerio.GRCz11.dna.primary_assembly.fa -bed /ebio/ecnv_projects/danio_species_skin/code/extract_bed/kcnj13_start_157.bed -fo kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus.fa
+	cat kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus.fa | sed -e '1!{/^>.*/d;}' | sed  ':a;N;$!ba;s/\n//2g' > kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus.merged.fa
+	python3 /ebio/ecnv/dooley/checkouts/bio_script/fa_rev_com.py kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus.merged.fa > kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus.merged.revcomp.fa
+	python3 /ebio/ecnv/dooley/bio_script/dna2proteins.py -i kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus.merged.revcomp.fa -o kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus.merged.revcomp_protien.fa
+	rm -f kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus_Danio_rerio.GRCz11.dna.primary_assembly.fa
+done
+```

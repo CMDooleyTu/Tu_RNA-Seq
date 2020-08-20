@@ -129,7 +129,25 @@ Rscript pca_rnaseq.R your_matrix.tsv your_sample_description.txt
 ##  Creating countplots from RNA-Seq data 
 
 
-### Coutplot generation
+### Coutplot generation matrix generation
+Count plots matrix generatioin requires a list of genes to grep out of the complete count matrix
+
+```bash
+for i in $(ls /ebio/ecnv/dooley/bio_script/genes/)
+do
+	grep -f /ebio/ecnv/dooley/bio_script/genes/${i} /ebio/ecnv_projects/fins_rna_seq/data/STAR-RNAseq/rerun/fastq/whole-matrix-output/R_DS_LS_default_counts_normalized_counts_deseq_default.tsv > tmp_R_${i}
+	head -n 1 /ebio/ecnv_projects/fins_rna_seq/data/STAR-RNAseq/rerun/fastq/whole-matrix-output/R_DS_LS_default_counts_normalized_counts_deseq_default.tsv | cat - tmp_R_${i} > R_DS_LS_${i}
+	rm -f tmp_R_${i}
+done
+```
+### Coutplot script
+
+```bash
+for i in $(ls R_*)
+do
+Rscript /Users/dooley/bio_script/graph_rnaseq_counts_line_mean_sd.R ${i} /Users/dooley/Documents/Tuebingen/hybrid_RNA-Seq/samples_skin_trunk_pair_2.txt counts_line_${i}.pdf
+done
+```
 
 ##  Extracting sequence regions from .bam files
 

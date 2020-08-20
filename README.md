@@ -78,6 +78,7 @@ Rscript deseq2_analysis.R sample_description.txt count_matrix.tsv
 ## Principal Component Analysis (PCA)
 ```bash
 Rscript your_matrix.tsv your_sample_description.txt
+```
 
 ##  Creating countplots from RNA-Seq data 
 

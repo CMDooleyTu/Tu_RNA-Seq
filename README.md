@@ -75,6 +75,9 @@ Depending on the type of sequencing library you should choose one of the raw_cou
 ``` bash
 Rscript deseq2_analysis.R sample_description.txt count_matrix.tsv
 ```
+
+## Matrix file prep 
+
 ## Principal Component Analysis (PCA)
 ```bash
 Rscript pca_rnaseq.R your_matrix.tsv your_sample_description.txt
@@ -82,7 +85,7 @@ Rscript pca_rnaseq.R your_matrix.tsv your_sample_description.txt
 
 ##  Creating countplots from RNA-Seq data 
 
-### Matrix file prep 
+
 ### Coutplot generation
 
 ##  Extracting sequence regions from .bam files

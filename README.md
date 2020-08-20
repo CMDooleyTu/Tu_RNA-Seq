@@ -25,7 +25,7 @@ cd your_dir_name
 
 ```bash
 ln -s /path/to/your/fatsq/files/file.1.fastq.gz file.1.fastq.gz
-
+```
 
 ####Example
 

@@ -27,7 +27,7 @@ cd your_dir_name
 ln -s /path/to/your/fatsq/files/file.1.fastq.gz file.1.fastq.gz
 ```
 
-####Example
+####	Example
 
 ```bash
 for i in {1..28};

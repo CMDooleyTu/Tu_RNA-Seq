@@ -1,4 +1,4 @@
-# Tu_RNA-Seq
+# Tübingen Danio Sequencing 
 This will be the place to find bioinformatic commands, scripts and tools.
 
 

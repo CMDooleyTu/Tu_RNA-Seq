@@ -169,3 +169,82 @@ do
 	rm -f kcnj13_S1906Nr${i}Aligned.sortedByCoord.out.consensus_Danio_rerio.GRCz11.dna.primary_assembly.fa
 done
 ```
+
+## Allele specific expression plots
+
+```R
+#attempt to make plots of allele frequency
+
+library(ggplot2)
+library(reshape2)
+
+
+#set working directory  
+setwd("/Users/dooley/Documents/Tuebingen/hybrid_RNA-Seq/score/allele_specific_exp/kcnj13")
+getwd()
+
+allele_table <- read.table("kcnj13_r_vcf_input_skin_p2.tsv", header = TRUE, sep = "\t")
+print(allele_table)
+
+#calculate allele frequency of ref allele
+allele_table$S1906Nr15_frq <- (allele_table[,4]/(allele_table[,4] + allele_table[,5]))*100
+
+allele_table$S1906Nr17_frq <- (allele_table[,6]/(allele_table[,6] + allele_table[,7]))*100
+
+allele_table$S1906Nr21_frq <- (allele_table[,8]/(allele_table[,8] + allele_table[,9]))*100
+
+allele_table$S1906Nr25_frq <- (allele_table[,10]/(allele_table[,10] + allele_table[,11]))*100
+
+allele_table$S1906Nr27_frq <- (allele_table[,12]/(allele_table[,12] + allele_table[,13]))*100
+
+#allele_table$S1906Nr11_frq <- (allele_table[,14]/(allele_table[,14] + allele_table[,15]))*100
+
+#allele_table$S1906Nr13_frq <- (allele_table[,16]/(allele_table[,16] + allele_table[,17]))*100
+
+#calculate total counts
+allele_table$S1906Nr15_count <- (allele_table[,4] + allele_table[,5])
+allele_table$S1906Nr17_count <- (allele_table[,6] + allele_table[,7])
+allele_table$S1906Nr21_count <- (allele_table[,8] + allele_table[,9])
+allele_table$S1906Nr25_count <- (allele_table[,10] + allele_table[,11])
+allele_table$S1906Nr27_count <- (allele_table[,12] + allele_table[,13])
+#allele_table$S1906Nr11_count <- (allele_table[,14] + allele_table[,15])
+#allele_table$S1906Nr13_count <- (allele_table[,16] + allele_table[,17])
+
+#subet out frequencies
+frq <- subset(allele_table, select = c(pos, S1906Nr15_frq, S1906Nr17_frq, S1906Nr21_frq, S1906Nr25_frq, S1906Nr27_frq))
+print(frq)
+
+#melt for ggplot2
+frq_reshape <- melt(frq, id.vars = "pos", variable.name = "Sample", value.name = "Frq", na.rm=TRUE)
+frq_reshape$pos <- as.character(frq_reshape$pos)
+print(frq_reshape)
+
+#subset out the total counts
+count <- subset(allele_table, select = c(pos, S1906Nr15_count, S1906Nr17_count, S1906Nr21_count, S1906Nr25_count, S1906Nr27_count))
+print(count)
+#melt for ggplot2
+count_reshape_2 <- melt(count, id.vars = "pos", variable.name = "Sample", value.name = "Count", na.rm=TRUE)
+print(count_reshape_2)
+count_reshape_2$pos <- as.character(count_reshape_2$pos)
+
+#produce plot of counts at SNPs
+p1 <- ggplot(count_reshape_2, aes(x=pos, y=Count)) + geom_violin(fill="#C0C0C0", adjust=1.0, trim=TRUE)
+p1 <- p1 + theme_bw()
+p1 <- p1 + stat_summary(fun.data=mean_sdl, geom="pointrange", color="black")
+p1 <- p1 + geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5, color="blue")
+p1 <- p1 + labs(title = ""~italic(kcnj13)~" Pair2 Skin counts at SNPs") + theme_bw() + theme(plot.title = element_text(hjust=0.5))
+p1 <- p1 + xlab("SNP Position on Chr")
+p1
+
+#produce plot of ref frequency
+p2 <- ggplot(frq_reshape, aes(x=pos, y=Frq)) + geom_violin(fill="#C0C0C0", adjust=1.0, trim=TRUE)
+p2 <- p2 + theme_bw()
+p2 <- p2 + stat_summary(fun.data=mean_sdl, geom="pointrange", color="black")
+p2 <- p2 + geom_dotplot(binaxis='y', stackdir='center', dotsize=0.5, color="blue")
+p2 <- p2 + labs(title = ""~italic(kcnj13)~" Pair 2 Skin "~italic(D.rerio)~" Allele Frequency") + theme_bw() + theme(plot.title = element_text(hjust=0.5))
+p2 <- p2 + ylim(0, 100)
+p2 <- p2 + xlab("SNP Position on Chr")
+p2 <- p2 + ylab("D.rerio Allele Frequency")
+p2
+````
+	

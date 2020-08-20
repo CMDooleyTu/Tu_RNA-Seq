@@ -16,6 +16,14 @@ This will be the place to find bioinformatic commands, scripts and tools.
 ### Samples file for STAR and DeSEQ2 analysis:
 > `/ebio/ecnv_projects/hybrid_RNA-Seq/doc/samples_skin_trunk_pair.txt`
 
+### Create working directory
+```bash
+mkdir your_dir_name
+cd your_dir_name
+```
+
+
+
 ## STAR alignment and DeSeq2 analysis
 ### RNAseq: alignment to reference genome and differential expression analysis
 Modified from:

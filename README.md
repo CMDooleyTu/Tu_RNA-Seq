@@ -99,6 +99,27 @@ Rscript deseq2_analysis.R sample_description.txt count_matrix.tsv
 ```
 
 ## Matrix file prep 
+The matrix file header now needs to be modified for downstream analysis.
+```bash
+#count columns
+head -n 1 FILE | awk '{print NF}'
+head -n 1 normalized_counts_deseq.tsv | awk '{print NF}'
+
+#there are 31 col
+
+awk 'NR==1; NR > 1 {print $0 | "sort -n -k 1,1"}' col4_df_raw_counts.tsv > col4_df_raw_counts_sorted.tsv
+
+#remove the normilised couts plus annotation but removes the geneID in col 1
+cut -d$'\t' -f 2-31 normalized_counts_deseq.tsv > tmp_cut_normalized_counts_deseq_default.tsv
+paste col4_df_raw_counts_sorted.tsv tmp_cut_normalized_counts_deseq_default.tsv > raw_normalized_counts_deseq.tsv
+rm -r tmp_cut_normalized_counts_deseq_default.tsv
+head -n 1 raw_normalized_counts_deseq.tsv > head_raw_normalized_counts_deseq.tsv
+#now edit the header!!!
+
+tail -n +2 raw_normalized_counts_deseq.tsv > tmp_tail_raw_normalized_counts_deseq.tsv
+cat head_raw_normalized_counts_deseq.tsv tmp_tail_raw_normalized_counts_deseq.tsv > R_raw_normalized_counts_deseq.tsv
+```
+
 
 ## Principal Component Analysis (PCA)
 ```bash

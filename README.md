@@ -21,7 +21,21 @@ This will be the place to find bioinformatic commands, scripts and tools.
 mkdir your_dir_name
 cd your_dir_name
 ```
+### Create soft links to FASTQ files
 
+```bash
+ln -s /path/to/your/fatsq/files/file.1.fastq.gz file.1.fastq.gz
+
+
+####Example
+
+```bash
+for i in {1..28};
+do
+	ln -s /ebio/ecnv_projects/hybrid_RNA-Seq/data/danio_hybrid/S1906/S1906_1/01_fastq/S1906Nr${i}.1.fastq.gz S1906Nr${i}.1.fastq.gz
+	ln -s /ebio/ecnv_projects/hybrid_RNA-Seq/data/danio_hybrid/S1906/S1906_1/01_fastq/S1906Nr${i}.2.fastq.gz S1906Nr${i}.2.fastq.gz
+done
+```
 
 
 ## STAR alignment and DeSeq2 analysis

@@ -16,3 +16,6 @@ This will be the place to find bioinformatic commands, scripts and tools.
 ### Samples file for STAR and DeSEQ2 analysis:
 > `/ebio/ecnv_projects/hybrid_RNA-Seq/doc/samples_skin_trunk_pair.txt`
 
+##  Extracting sequence regions from .bam files
+
+##  Creating countplots from RNA-Seq data 
